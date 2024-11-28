@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 
 function NimGame() {
-    const [sticks, setSticks] = useState(11); 
+    const [sticks, setSticks] = useState(17);
     const [isPlayerTurn, setIsPlayerTurn] = useState(true);
     const [gameOver, setGameOver] = useState(false);
-    const [message, setMessage] = useState("Your turn! Select 1 or 2 sticks to remove.");
+    const [message, setMessage] = useState("Your turn! Select 1-3 sticks to remove.");
 
     // CPU's turn logic
     useEffect(() => {
         if (!isPlayerTurn && !gameOver) {
-            // Add a small delay to make CPU's move feel more natural
             const timeoutId = setTimeout(() => {
                 makeCPUMove();
             }, 1000);
@@ -21,27 +20,24 @@ function NimGame() {
         if (sticks <= 0) return;
 
         // Implementing optimal strategy
-        // Goal: Leave opponent with a number of sticks that is a multiple of 3 plus 1
+        // Goal: Leave opponent with a multiple of 4 sticks
         let sticksToRemove;
         
-        switch (sticks) {
-            case 11: // Remove 2 to leave 9
-            case 10: // Remove 1 to leave 9
-            case 9:  // Remove 2 to leave 7
-            case 8:  // Remove 1 to leave 7
-            case 7:  // Remove 2 to leave 5
-            case 6:  // Remove 1 to leave 5
-            case 5:  // Remove 1 to leave 4
-            case 3:  // Remove 2 to leave 1
-            case 2:  // Remove 1 to leave 1
-                sticksToRemove = sticks % 3 === 0 ? 1 : (sticks - (sticks - 1) % 3 - 1) % 3 || 1;
-                break;
-            default: // If something unexpected, take 1 stick
-                sticksToRemove = 1;
+        const remainder = sticks % 4;
+        
+        if (remainder === 0) {
+            // We're at a multiple of 4, we're in a losing position
+            // Take 1 stick and hope for player mistake
+            sticksToRemove = 1;
+        } else {
+            // Take sticks to leave a multiple of 4
+            sticksToRemove = remainder;
         }
 
-        const newSticks = sticks - sticksToRemove;
+        // Make sure we don't take more than 3 sticks or more than available
+        sticksToRemove = Math.min(3, sticksToRemove, sticks);
         
+        const newSticks = sticks - sticksToRemove;
         setMessage(`CPU removed ${sticksToRemove} stick${sticksToRemove > 1 ? 's' : ''}`);
         setSticks(newSticks);
 
@@ -69,10 +65,10 @@ function NimGame() {
     };
 
     const resetGame = () => {
-        setSticks(11);
+        setSticks(17);
         setIsPlayerTurn(true);
         setGameOver(false);
-        setMessage("Your turn! Select 1 or 2 sticks to remove.");
+        setMessage("Your turn! Select 1-3 sticks to remove.");
     };
 
     const renderSticks = () => {
@@ -85,7 +81,6 @@ function NimGame() {
                         display: 'inline-block',
                         width: '8px',
                         height: '60px',
-                        backgroundColor: '#4caf50',
                         margin: '0 3px',
                         borderRadius: '4px',
                         boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
@@ -127,50 +122,30 @@ function NimGame() {
             
             {!gameOver && isPlayerTurn && (
                 <div style={{ margin: '20px 0' }}>
-                    <button 
-                        onClick={() => handlePlayerMove(1)}
-                        style={{
-                            padding: '10px 20px',
-                            margin: '0 10px',
-                            fontSize: '16px',
-                            backgroundColor: '#2196f3',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '5px',
-                            cursor: 'pointer',
-                            transition: 'transform 0.2s ease'
-                        }}
-                        onMouseEnter={(e) => {
-                            e.target.style.transform = 'translateY(-2px)';
-                        }}
-                        onMouseLeave={(e) => {
-                            e.target.style.transform = 'translateY(0)';
-                        }}
-                    >
-                        Remove 1 Stick
-                    </button>
-                    <button 
-                        onClick={() => handlePlayerMove(2)}
-                        style={{
-                            padding: '10px 20px',
-                            margin: '0 10px',
-                            fontSize: '16px',
-                            backgroundColor: '#2196f3',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '5px',
-                            cursor: 'pointer',
-                            transition: 'transform 0.2s ease'
-                        }}
-                        onMouseEnter={(e) => {
-                            e.target.style.transform = 'translateY(-2px)';
-                        }}
-                        onMouseLeave={(e) => {
-                            e.target.style.transform = 'translateY(0)';
-                        }}
-                    >
-                        Remove 2 Sticks
-                    </button>
+                    {[1, 2, 3].map(num => (
+                        <button 
+                            key={num}
+                            onClick={() => handlePlayerMove(num)}
+                            style={{
+                                padding: '10px 20px',
+                                margin: '0 10px',
+                                fontSize: '16px',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '5px',
+                                cursor: 'pointer',
+                                transition: 'transform 0.2s ease'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.target.style.transform = 'translateY(-2px)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.target.style.transform = 'translateY(0)';
+                            }}
+                        >
+                            Remove {num} Stick{num > 1 ? 's' : ''}
+                        </button>
+                    ))}
                 </div>
             )}
 
@@ -181,7 +156,6 @@ function NimGame() {
                         style={{
                             padding: '10px 20px',
                             fontSize: '16px',
-                            backgroundColor: '#4caf50',
                             color: 'white',
                             border: 'none',
                             borderRadius: '5px',

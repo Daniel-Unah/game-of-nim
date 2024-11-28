@@ -1,14 +1,15 @@
 .App {
   text-align: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
-  color: white;
+  background: #1a1a1a;
+  color: #ffffff;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .App-header {
   padding: 2rem;
   margin-bottom: 2rem;
+  background-color: #252525;
 }
 
 .App-header h1 {
@@ -21,10 +22,9 @@ main {
   max-width: 800px;
   margin: 0 auto;
   padding: 2rem;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+  background: #252525;
   border-radius: 15px;
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
 }
 
 h2 {
@@ -34,7 +34,7 @@ h2 {
 }
 
 input[type="number"] {
-  background: rgba(255, 255, 255, 0.2);
+  background: #333333;
   border: none;
   padding: 8px 16px;
   border-radius: 5px;
@@ -46,7 +46,7 @@ input[type="number"] {
 
 input[type="number"]:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
 }
 
 label {
@@ -59,18 +59,22 @@ label {
 
 button {
   transition: transform 0.2s, box-shadow 0.2s;
+  background-color: #404040 !important;
 }
 
 button:hover {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  background-color: #505050 !important;
 }
 
 /* Animation for the game objects */
 span {
   transition: all 0.3s ease;
+  background-color: #808080 !important;
 }
 
 span:hover {
   transform: scale(1.1);
+  background-color: #909090 !important;
 }
